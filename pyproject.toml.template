@@ -1,0 +1,70 @@
+[project]
+name = "{project-name}"
+version = "{project-version}"
+description = "{project-description}"
+readme = "README.md"
+requires-python = ">=3.13"
+
+[project.optional-dependencies]
+dev = [
+  "poethepoet>=0.42.1",
+  "pre-commit>=4.5.1",
+  "pytest>=9.0.2",
+  "ruff>=0.15.8",
+  "ty>=0.0.26",
+]
+
+[project.scripts]
+siiway = "main:main"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+exclude = [".git", ".venv", "dist", "build"]
+
+[tool.ruff.lint]
+select = [
+  "E",  # pycodestyle (Errors)
+  "F",  # Pyflakes
+  "I",  # isort (Import sorting)
+  "B",  # flake8-bugbear
+  "UP", # pyupgrade
+  "N",  # pep8-naming
+]
+ignore = [
+  "E741", # Ambiguous variable name: l / O / I
+  "E501", # Line too long (100 > 79 characters)
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.ty.environment]
+python-version = "3.13"
+
+[tool.ty.src]
+include = ["src", "tests"]
+exclude = ["build", "dist"]
+
+[tool.ty.rules]
+all = "error"
+
+[tool.ty.terminal]
+output-format = "full"
+error-on-warning = false
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.poe.tasks]
+lint = "ruff check ."
+format = "ruff format ."
+test = "pytest"
+typecheck = "ty check"
+run = "python -m main"
+precommit-install = "pre-commit install"
+precommit-run = "pre-commit run --all-files"
